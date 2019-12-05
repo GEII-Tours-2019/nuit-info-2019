@@ -67,7 +67,7 @@ function AskPage (path, get_d, post_body, request, response) {
     if( path.startsWith("/static/") ){
 
         let Rpath = path.replace(/\.+/gi, ".")
-        fs.readFile(Rpath, (err, data) => {
+        fs.readFile("." + Rpath, (err, data) => {
 
             if (err) {
                 console.error(err)
@@ -117,6 +117,47 @@ function AskPage (path, get_d, post_body, request, response) {
             }
         }
 
+    } else if ( path.endsWith(".html") ){
+
+        let Rpath = path.replace(/\.+/gi, ".")
+        fs.readFile("./html" + Rpath, (err, data) => {
+
+            if (err) {
+                console.error(err)
+                
+                response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
+                response.end("Coucou, erreur 404 en cours de dev ;) #licorne")
+
+            } else {
+
+                response.writeHead(200, {"Content-Type": getMime(Rpath)})
+                response.end(data)
+
+            }
+
+        })
+    } else if (path == "/") {
+
+        fs.readFile("./html/index.html", (err, data) => {
+
+            if (err) {
+                console.error(err)
+                
+                response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
+                response.end("Coucou, erreur 404 en cours de dev ;) #licorne")
+
+            } else {
+
+                response.writeHead(200, {"Content-Type": getMime(".html")})
+                response.end(data)
+
+            }
+
+        })
+
+    } else {   
+        response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
+        response.end("Coucou, erreur 404 en cours de dev ;) #licorne")
     }
 }
 
