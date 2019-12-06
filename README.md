@@ -24,6 +24,7 @@ Il embarque sous forme de site web :
 - Une base de données (110 entrées de site web)
 - une interface simple et intuitive, pensée pour tout les utilisateurs.
 - Le tout en HTTPS :)
+- Le code d'erreur 404 de manière ludique ( lien : https://osmoze-rp.com/err404 )
 
 ### 2. Installation + liens
 
