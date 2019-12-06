@@ -60,3 +60,6 @@ Le serveur reçois donc la recherche, et compare les mots clé à la base de don
 
 Le résultat est trié, puis envoyé de nouveau au client en JSON, qui affiche les résultats, ou l'absence de résultat.  
 
+### Plaquette du projet
+
+![shéma](https://raw.githubusercontent.com/GEII-Tours-2019/nuit-info-2019/master/plaquette%20d'infrastructure.png)
