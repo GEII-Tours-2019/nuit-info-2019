@@ -16,15 +16,29 @@ body, html {height: 100%}
   background-position: center;
   /*background-size: cover;*/ background-repeat: repeat;
 }
+#searchbar::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: lightgray;
+  opacity: 1; /* Firefox */
+}
+
+.brizel {
+    font-family: "Brizel", sans-serif;
+}
+
+@font-face {
+ font-family: "Brizel";
+ src: url("/static/others/Brizel.ttf") format("truetype");
+}
+
 </style>
 <body>
 
 <div id="SearchPanel" class="bgimg w3-display-container w3-animate-opacity w3-text-white">
-  <div class="w3-display-topleft w3-padding-large w3-xlarge">
+  <div class="w3-display-topleft w3-padding-large w3-xxlarge brizel">
 Les Impédants
   </div>
   <div class="w3-display-middle">
-    <input style="background-color: rgba(255, 255, 255, 0.4);" id="searchbar" placeholder="Un problème ?" class="w3-input w3-jumbo w3-animate-top w3-border w3-round-large">
+    <input style="background-color: rgba(255, 255, 255, 0.4);color: lightgray;width: 100%!important;" id="searchbar" placeholder="Un problème ?" class="w3-input w3-jumbo w3-animate-top w3-border w3-round-large">
     <p class="w3-large w3-center">
       <button onclick="rechercher()" style="width:54.5px;background-color: rgba(255, 255, 255, 0.4);" class="w3-hover-text-red w3-button w3-badge"><i class="fas fa-microphone fa-2x"></i></button> &nbsp; &nbsp; 
       <button onclick="lancer()" style="width:54.5px;background-color: rgba(255, 255, 255, 0.4);" class="w3-button w3-badge"><i class="fas fa-search fa-2x"></i></button>
@@ -39,8 +53,8 @@ Les Impédants
       </div>
 </div>
 
-<div id="resultPanel" style="width: 100vw;height: 100vh; display: none;padding: 20vh 20vw;" class="w3-light-grey">
-    coucou
+<div id="resultPanel" style="width: 100vw;height: 100vh; display: none;padding: 20vh 20vw;" class="bgimg w3-animate-opacity">
+    <div onclick="reset()" style="position: absolute;top : 5vh;right: 5vw;font-size: 6em;color:white;">&times;</div>
 </div>
 
     <script>
@@ -50,6 +64,11 @@ Les Impédants
 		var recognition = new SpeechRecognition();
 		recognition.lang = 'fr-FR';
 
+        function reset() {
+            document.getElementById("resultPanel").style.display = "none"
+            document.getElementById("SearchPanel").style.display = "block"
+            document.getElementById("resultPanel").innerHTML = `<div onclick="reset()" style="position: absolute;top : 5vh;right: 5vw;font-size: 6em;color:white;">&times;</div>`
+        }
 
 		function rechercher() {
 			recognition.start();
@@ -66,6 +85,7 @@ Les Impédants
 
 		recognition.onspeechend = function() {
 			recognition.stop();
+            lancer()
         }
         
         function lancer () {
@@ -91,7 +111,14 @@ Les Impédants
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     var Meta = JSON.parse(xhr.responseText)
                     // Manage data from server here
-                    
+                    let nothing = true
+                    Meta.forEach(el => {
+                        nothing = false
+                        document.getElementById("resultPanel").innerHTML += `<div class="w3-card-4 w3-white w3-padding w3-margin w3-border w3-round-large"><a class="w3-text-blue" target="_blank" href="${el.redirection}">${el.redirection}</a><p>${el.description}</p></div>`
+                    });
+                    if(nothing){
+                        document.getElementById("resultPanel").innerHTML += `<div class="w3-card-4 w3-white w3-padding w3-margin w3-border w3-round-large"><p class="w3-xlarge">Pas de résultat pour votre recherche</p></div>`
+                    }
                 }
             };
 

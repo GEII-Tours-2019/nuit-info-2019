@@ -25,6 +25,10 @@ function getMysql (cb) {
 }
 
 
+function saferize (input) {
+    return input.toLowerCase().replace(/[éèëê]/gi, "e").replace(/[àäâ]/gi, "a").replace(/[ïî]/gi, "i").replace(/[öô]/gi, "o").replace(/ÿ/gi, "y")
+}
+
 
 function getMime(filename) {
     if(filename.endsWith(".html")){
@@ -101,7 +105,7 @@ function AskPage (path, get_d, post_body, request, response) {
                                 let results = {}
 
                                 result.forEach(el => {
-                                    if(post_body.includes(el.mot)){
+                                    if(saferize(post_body).includes(el.mot)){
                                         if(results[el.redirection] != undefined){
                                             results[el.redirection].score += el.score
                                         } else {
