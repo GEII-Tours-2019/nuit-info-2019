@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<title>Jean Cloud Helping</title>
+<link rel="icon" href="/static/img/logo.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" crossorigin="anonymous">
+<style>
+body,h1 {font-family: "Raleway", sans-serif}
+body, html {height: 100%}
+.bgimg {
+  background-image: url('/static/img/bg1.jpg');
+  min-height: 100%;
+  background-position: center;
+  /*background-size: cover;*/ background-repeat: repeat;
+}
+</style>
+<body>
+
+<div id="SearchPanel" class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+  <div class="w3-display-topleft w3-padding-large w3-xlarge">
+Les Impédants
+  </div>
+  <div class="w3-display-middle">
+    <input style="background-color: rgba(255, 255, 255, 0.4);" id="searchbar" placeholder="Un problème ?" class="w3-input w3-jumbo w3-animate-top w3-border w3-round-large">
+    <p class="w3-large w3-center">
+      <button onclick="rechercher()" style="width:54.5px;background-color: rgba(255, 255, 255, 0.4);" class="w3-hover-text-red w3-button w3-badge"><i class="fas fa-microphone fa-2x"></i></button> &nbsp; &nbsp; 
+      <button onclick="lancer()" style="width:54.5px;background-color: rgba(255, 255, 255, 0.4);" class="w3-button w3-badge"><i class="fas fa-search fa-2x"></i></button>
+    </p>
+  </div>
+  <div class="w3-display-bottomleft w3-padding-large">
+    Projet pour la <a href="https://www.nuitdelinfo.com/" target="_blank">Nuit de l'info 2019</a>
+  </div>
+  
+  <div class="w3-display-bottomright w3-padding-large">
+        <img src="/static/img/jc.png" style="height: 35vh;" /> 
+      </div>
+</div>
+
+<div id="resultPanel" style="width: 100vw;height: 100vh; display: none;padding: 20vh 20vw;" class="w3-light-grey">
+    coucou
+</div>
+
+    <script>
+		var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+		var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
+		var recognition = new SpeechRecognition();
+		recognition.lang = 'fr-FR';
+
+
+		function rechercher() {
+			recognition.start();
+		}
+
+		recognition.onresult = function(event) {
+
+            var last = event.results.length - 1;
+            var result = event.results[last][0].transcript;
+
+            document.getElementById("searchbar").value = result
+			//console.log('Confidence: ' + event.results[0][0].confidence);
+		}
+
+		recognition.onspeechend = function() {
+			recognition.stop();
+        }
+        
+        function lancer () {
+            document.getElementById("SearchPanel").style.display = "none"
+            document.getElementById("resultPanel").style.display = "block"
+            var xhr = null;
+            if (window.XMLHttpRequest || window.ActiveXObject) {
+                if (window.ActiveXObject) {
+                    try {
+                        xhr = new ActiveXObject("Msxml2.XMLHTTP");
+                    } catch(e) {
+                        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                } else {
+                    xhr = new XMLHttpRequest(); 
+                }
+            } else {
+                alert("Votre navigateur ne supporte pas l'objet XMLHTTPRequest...");
+                return null;
+            }
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var Meta = JSON.parse(xhr.responseText)
+                    // Manage data from server here
+                    
+                }
+            };
+
+            xhr.open("POST", "/API/get/resultIA", true);
+            xhr.send(document.getElementById("searchbar").value);
+        }
+	</script>
+
+</body>
+</html>

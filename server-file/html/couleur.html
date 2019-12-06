@@ -64,4 +64,30 @@
 			document.location.href="https://www.google.fr"
 		}
 	</script>-->
+
+	<script>
+		var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+		var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
+		var recognition = new SpeechRecognition();
+		recognition.lang = 'fr-FR';
+
+
+		function rechercher() {
+			recognition.start();
+		}
+
+		recognition.onresult = function(event) {
+
+		var last = event.results.length - 1;
+		var result = event.results[last][0].transcript;
+
+		document.getElementById("barre").value = result
+			console.log('Confidence: ' + event.results[0][0].confidence);
+		}
+
+		recognition.onspeechend = function() {
+			recognition.stop();
+		}
+	</script>
 </html>

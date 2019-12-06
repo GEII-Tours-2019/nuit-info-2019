@@ -53,14 +53,41 @@
 				
         </div>
 
-    </body>
 	
-	<!--<script>
-		var a = prompt("Metter le code d'accer");
-		if (a =='CRD5-GTFT-CK65-JOPM-V29N-24G1-HH28-LLFV'){
-			alert("Bonne navigation sur le site");
-		}
-		else if (a !='CRD5-GTFT-CK65-JOPM-V29N-24G1-HH28-LLFV'){
-			document.location.href="https://www.google.fr"
-		}
-	</script>-->
+		<!--<script>
+			var a = prompt("Metter le code d'accer");
+			if (a =='CRD5-GTFT-CK65-JOPM-V29N-24G1-HH28-LLFV'){
+				alert("Bonne navigation sur le site");
+			}
+			else if (a !='CRD5-GTFT-CK65-JOPM-V29N-24G1-HH28-LLFV'){
+				document.location.href="https://www.google.fr"
+			}
+		</script>-->
+
+		<script>
+			var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+			var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
+			var recognition = new SpeechRecognition();
+			recognition.lang = 'fr-FR';
+
+
+			function rechercher() {
+				recognition.start();
+			}
+
+			recognition.onresult = function(event) {
+
+			var last = event.results.length - 1;
+			var result = event.results[last][0].transcript;
+
+			document.getElementById("barre").value = result
+				console.log('Confidence: ' + event.results[0][0].confidence);
+			}
+
+			recognition.onspeechend = function() {
+				recognition.stop();
+			}
+		</script>
+	</body>
+</html>

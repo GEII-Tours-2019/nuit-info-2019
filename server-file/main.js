@@ -2,6 +2,7 @@ let http = require("http");
 let fs = require("fs");
 let url = require('url');
 let mysql = require("mysql");
+let https = require("https");
 
 
 function getMysql (cb) {
@@ -97,9 +98,58 @@ function AskPage (path, get_d, post_body, request, response) {
                                 response.end("Coucou, where is charly (click on the unicorn to refresh)")
                             } else {
 
-                                console.log(result);
+                                let results = {}
+
+                                result.forEach(el => {
+                                    if(post_body.includes(el.mot)){
+                                        if(results[el.redirection] != undefined){
+                                            results[el.redirection].score += el.score
+                                        } else {
+                                            results[el.redirection] = {
+                                                redirection : el.redirection,
+                                                score : el.score,
+                                                description : el.description
+                                            }
+                                        }
+                                    }
+                                });
+
+                                let sorted = []
+                                let tocontinue = true
+                                let bestScore = -1
+                                let bestValue = {}
+
+                                while (tocontinue == true) {
+
+                                    bestScore = -1
+                                    bestValue = {}
+
+                                    for (const k in results) {
+                                        if (results.hasOwnProperty(k) && results[k] != undefined) {
+                                            const el = results[k];
+                                            
+                                            if(el.score > bestScore){
+                                                bestValue = el
+                                                bestScore = el.score
+                                            }
+
+                                        }
+                                    }
+
+                                    if(bestScore == -1){
+                                        tocontinue = false
+                                    } else {
+                                        sorted.push(bestValue)
+                                        results[bestValue.redirection] = undefined
+                                    }
+
+                                }
+
+                                
+
+                                console.log(sorted);
                                 response.writeHead(200, {"Content-Type": "application/json; charset=utf-8"})
-                                response.end(JSON.stringify(result))
+                                response.end(JSON.stringify(sorted))
                             }
                             conn.end()
                         });
@@ -184,3 +234,30 @@ server.on('request', (request, response) => {
 })
 
 server.listen(4806)
+
+
+
+const options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/osmoze-rp.com/privkey.pem'),/*  test/fixtures/keys/agent2-key.pem  */
+    cert: fs.readFileSync('/etc/letsencrypt/live/osmoze-rp.com/cert.pem')/*  test/fixtures/keys/agent2-cert.pem  */
+};
+
+https.createServer(options, (request, response) => {
+    
+    let path = url.parse(request.url).pathname
+    let get_d = url.parse(request.url).query
+    let post_body = ""
+
+    if(request.method == "POST"){
+        request.on("data", function (chunk) {
+            post_body += chunk
+            if (post_body.length > 1e6) {request.connection.destroy()}
+        })
+        request.on("end", function(){
+            AskPage(path, get_d, post_body, request, response)
+        })
+    } else {
+        AskPage(path, get_d, "", request, response)
+    }
+
+}).listen(443);
