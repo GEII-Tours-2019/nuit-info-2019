@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<title>Jean Cloud Helping</title>
+<link rel="icon" href="/static/img/logo.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" crossorigin="anonymous">
+<style>
+body,h1 {font-family: "Raleway", sans-serif}
+body, html {height: 100%}
+.bgimg {
+  background-image: url('/static/img/bg1.jpg');
+  min-height: 100%;
+  background-position: center;
+  /*background-size: cover;*/ background-repeat: repeat;
+}
+</style>
+<body>
+
+<div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+  <div class="w3-display-topleft w3-padding-large w3-xlarge">
+Les Impédants
+  </div>
+  <div class="w3-display-middle">
+    <p class="w3-xxxlarge">Erreur 404</p>
+    <p class="w3-large">Jean Cloud c'est malheureusement endormie pendant son trajet </p>
+  </div>
+  <div class="w3-display-bottomleft w3-padding-large">
+    Projet pour la <a href="https://www.nuitdelinfo.com/" target="_blank">Nuit de l'info 2019</a>
+  </div>
+  
+  <div class="w3-display-bottomright w3-padding-large">
+        <img id="sleeper1" src="/static/img/JC_sleep2.png" style="height: 35vh;display: none;" /> 
+        <img id="sleeper2" src="/static/img/JC_wake1.png" style="height: 35vh;display: block;" /> 
+      </div>
+</div>
+
+<script>
+	let toggSleep = false
+
+	setInterval(() => {
+
+		document.getElementById("sleeper1").style.display = (toggSleep == true ? "block" : "none")
+		document.getElementById("sleeper2").style.display = (toggSleep == false ? "block" : "none")
+		toggSleep = (toggSleep == true ? false : true)
+
+	}, 500)
+</script>
+
+</body>
+</html>

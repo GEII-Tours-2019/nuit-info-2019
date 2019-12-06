@@ -9,8 +9,8 @@ function getMysql (cb) {
     
     var con = mysql.createConnection({
         host: "localhost",
-        user: "xxxxx",
-        password: "xxxxx",
+        user: "xxxx",
+        password: "xxxx",
         database: "nuitinfo"
     });
   
@@ -22,6 +22,26 @@ function getMysql (cb) {
             cb(true, con)
         }
     });
+}
+
+
+function Do404 (req, res) {
+    fs.readFile("./html/err404.html", (err, data) => {
+
+        if (err) {
+            console.error(err)
+            
+            res.writeHead(500, {"Content-Type": "text/html; charset=utf-8"})
+            res.end("<h1>La licorne magique à céssé de fonctionner !</h1>")
+
+        } else {
+
+            res.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
+            res.end(data)
+
+        }
+
+    })
 }
 
 
@@ -77,8 +97,9 @@ function AskPage (path, get_d, post_body, request, response) {
             if (err) {
                 console.error(err)
                 
-                response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
-                response.end("Coucou, erreur 404 en cours de dev ;) #licorne")
+                /*response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
+                response.end("Coucou, erreur 404 en cours de dev ;) #licorne")*/
+                Do404(request, response)
 
             } else {
 
@@ -179,8 +200,9 @@ function AskPage (path, get_d, post_body, request, response) {
             if (err) {
                 console.error(err)
                 
-                response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
-                response.end("Coucou, erreur 404 en cours de dev ;) #licorne")
+                /*response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
+                response.end("Coucou, erreur 404 en cours de dev ;) #licorne")*/
+                Do404(request, response)
 
             } else {
 
@@ -197,8 +219,9 @@ function AskPage (path, get_d, post_body, request, response) {
             if (err) {
                 console.error(err)
                 
-                response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
-                response.end("Coucou, erreur 404 en cours de dev ;) #licorne")
+                /*response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
+                response.end("Coucou, erreur 404 en cours de dev ;) #licorne")*/
+                Do404(request, response)
 
             } else {
 
@@ -210,8 +233,9 @@ function AskPage (path, get_d, post_body, request, response) {
         })
 
     } else {   
-        response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
-        response.end("Coucou, erreur 404 en cours de dev ;) #licorne")
+        /*response.writeHead(404, {"Content-Type": "text/html; charset=utf-8"})
+        response.end("Coucou, erreur 404 en cours de dev ;) #licorne")*/
+        Do404(request, response)
     }
 }
 
