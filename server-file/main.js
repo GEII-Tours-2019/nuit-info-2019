@@ -9,8 +9,8 @@ function getMysql (cb) {
     
     var con = mysql.createConnection({
         host: "localhost",
-        user: "loulou123546",
-        password: "loulou123",
+        user: "xxxxx",
+        password: "xxxxx",
         database: "nuitinfo"
     });
   
