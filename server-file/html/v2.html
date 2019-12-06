@@ -35,10 +35,10 @@ body, html {height: 100%}
 
 <div id="SearchPanel" class="bgimg w3-display-container w3-animate-opacity w3-text-white">
   <div class="w3-display-topleft w3-padding-large w3-xxlarge brizel">
-Les Impédants
+Les Impédants : Votre moteur de recherche étudiant !
   </div>
   <div class="w3-display-middle">
-    <input style="background-color: rgba(255, 255, 255, 0.4);color: lightgray;width: 100%!important;" id="searchbar" placeholder="Un problème ?" class="w3-input w3-jumbo w3-animate-top w3-border w3-round-large">
+    <input onkeyup="return onpressed(event)" style="background-color: rgba(255, 255, 255, 0.4);color: lightgray;width: 100%!important;" id="searchbar" placeholder="Un problème ?" class="w3-input w3-jumbo w3-animate-top w3-border w3-round-large">
     <p class="w3-large w3-center">
       <button onclick="rechercher()" style="width:54.5px;background-color: rgba(255, 255, 255, 0.4);" class="w3-hover-text-red w3-button w3-badge"><i class="fas fa-microphone fa-2x"></i></button> &nbsp; &nbsp; 
       <button onclick="lancer()" style="width:54.5px;background-color: rgba(255, 255, 255, 0.4);" class="w3-button w3-badge"><i class="fas fa-search fa-2x"></i></button>
@@ -54,24 +54,45 @@ Les Impédants
 </div>
 
 <div id="resultPanel" style="width: 100vw;height: 100vh; display: none;padding: 20vh 20vw;" class="bgimg w3-animate-opacity">
-    <div onclick="reset()" style="position: absolute;top : 5vh;right: 5vw;font-size: 6em;color:white;">&times;</div>
+    <div onclick="goToSearch()" style="position: absolute;top : 5vh;right: 5vw;font-size: 6em;color:white;">&times;</div>
 </div>
 
     <script>
-		var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
-		var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+        var AllowVoice = false
+        if(SpeechRecognition || webkitSpeechRecognition){
+            AllowVoice = true
 
-		var recognition = new SpeechRecognition();
-		recognition.lang = 'fr-FR';
+            var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+            var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
 
-        function reset() {
+		    var recognition = new SpeechRecognition();
+		    recognition.lang = 'fr-FR';
+        }
+
+        function onpressed (event) {
+            if(event.which == 13){
+                lancer()
+            }
+        }
+
+        function goToResult() {
+            document.getElementById("resultPanel").style.display = "block"
+            document.getElementById("SearchPanel").style.display = "none"
+            document.getElementById("resultPanel").innerHTML = `<div onclick="goToSearch()" style="position: absolute;top : 5vh;right: 5vw;font-size: 6em;color:white;">&times;</div>`
+        }
+
+        function goToSearch() {
             document.getElementById("resultPanel").style.display = "none"
             document.getElementById("SearchPanel").style.display = "block"
-            document.getElementById("resultPanel").innerHTML = `<div onclick="reset()" style="position: absolute;top : 5vh;right: 5vw;font-size: 6em;color:white;">&times;</div>`
+            document.getElementById("resultPanel").innerHTML = `<div onclick="goToSearch()" style="position: absolute;top : 5vh;right: 5vw;font-size: 6em;color:white;">&times;</div>`
         }
 
 		function rechercher() {
-			recognition.start();
+            if(AllowVoice){
+                recognition.start();
+            } else {
+                alert("Votre navigateur n'est pas compatible avec le vocal, essayer avec Google Chrome ou en cherchant manuellement")
+            }
 		}
 
 		recognition.onresult = function(event) {
@@ -80,12 +101,12 @@ Les Impédants
             var result = event.results[last][0].transcript;
 
             document.getElementById("searchbar").value = result
+            lancer()
 			//console.log('Confidence: ' + event.results[0][0].confidence);
 		}
 
 		recognition.onspeechend = function() {
 			recognition.stop();
-            lancer()
         }
         
         function lancer () {
@@ -111,13 +132,14 @@ Les Impédants
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     var Meta = JSON.parse(xhr.responseText)
                     // Manage data from server here
+                    goToResult()
                     let nothing = true
                     Meta.forEach(el => {
                         nothing = false
                         document.getElementById("resultPanel").innerHTML += `<div class="w3-card-4 w3-white w3-padding w3-margin w3-border w3-round-large"><a class="w3-text-blue" target="_blank" href="${el.redirection}">${el.redirection}</a><p>${el.description}</p></div>`
                     });
                     if(nothing){
-                        document.getElementById("resultPanel").innerHTML += `<div class="w3-card-4 w3-white w3-padding w3-margin w3-border w3-round-large"><p class="w3-xlarge">Pas de résultat pour votre recherche</p></div>`
+                        document.getElementById("resultPanel").innerHTML += `<div class="w3-card-4 w3-white w3-padding w3-margin w3-border w3-round-large"><p class="w3-xlarge">Pas de résultat pour votre recherche : "${document.getElementById("searchbar").value}"</p></div><div style="position: absolute;bottom: 0px;right: 0px;" class="w3-padding-large"><img src="/static/img/JC_sad.png" style="height: 35vh;" /></div>`
                     }
                 }
             };
